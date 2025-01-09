@@ -1,9 +1,9 @@
 # 施耐德数据中心DEMO 逆向
 
 ## 成果
-1. AirflowMaterial 用柏林噪声纹理+时间动画 巧妙实现气流效果
 
-
+1. AirflowMaterial.js 用柏林噪声纹理+时间动画 巧妙实现气流效果
+2. 云图.js 不用heatmap.js,实现简单的平面云图效果
 
 ## 难题
 
