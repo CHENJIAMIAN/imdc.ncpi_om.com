@@ -16,6 +16,7 @@
     - `AirflowMaterial.js` 用柏林噪声纹理+时间动画 巧妙实现气流效果
 6. 电力潮流模拟
     - 电流是怎么显示出来的? 直接改map的offset即可
+7. AO贴图
 
 ## 难题
 
@@ -257,4 +258,61 @@ function showBusbarTemperature(reset = false) {//function af(t=!1)
     const busbar = R.sceneGroup.getObjectByName("母线");
     toggleBusbarMaterial(busbar, reset);
 }
+```
+
+```js
+const textureNames = {
+    "ACDU_AO":"ACDU_AO.jpg" ,
+    "CDU_AO":"CDU_AO.jpg" ,
+    "UPS_AO":"UPS_AO.jpg" ,
+    "内部_AO":"内部_AO.jpg" ,
+    "前门_AO":"前门_AO.jpg" ,
+    "后门_AO":"后门_AO.jpg" ,
+    "天窗_AO":"天窗_AO.jpg" ,
+    "散热塔_AO":"散热塔_AO.jpg" ,
+    "机柜底座_AO":"机柜底座_AO.jpg" ,
+    "母线_AO":"母线_AO.jpg" ,
+    "母线支架AO":"母线支架AO.jpg" ,
+    "母线箱_AO":"母线箱_AO.jpg" ,
+    "水泵_AO":"水泵_AO.jpg" ,
+    "水网_AO":"水网_AO.jpg" ,
+    "水网底座_AO":"水网底座_AO.jpg" ,
+    "水网接口_AO":"水网接口_AO.jpg" ,
+    "水网阀门_AO":"水网阀门_AO.jpg" ,
+    "空调_AO":"空调_AO.jpg" ,
+};
+
+const pre = 'https://fastly.jsdelivr.net/gh/CHENJIAMIAN/imdc.ncpi_om.com@main/imdc.ncpi-om.com/ImdcPod/assets/ImdcPod/textures/AO/'
+function applyAmbientOcclusionMaps() {
+    function applyTextureToMesh(mesh, texture) {
+        mesh.traverse(child => {
+            if (child.isMesh) {
+                child.material.aoMap = texture;
+                child.material.aoMapIntensity = 1;
+            }
+        });
+    }
+
+    const aoTextureMappings = [];
+    for (let name in textureNames) {
+        aoTextureMappings.push({
+            name: name.replace("_AO", ""),
+            textureUrl:pre + textureNames[name]
+        });
+    }
+
+    const textureLoader = new THREE.TextureLoader();  
+
+    aoTextureMappings.forEach(({ name, textureUrl }) => {
+        const mesh = editor.scene.getObjectByName(name);
+        if (mesh) {            
+            const texture = textureLoader.load(textureUrl);  
+            texture.colorSpace = THREE.SRGBColorSpace;  
+            texture.flipY = false;
+            texture.channel = 1;
+            applyTextureToMesh(mesh, texture);
+        }
+    });
+}
+applyAmbientOcclusionMaps();
 ```
